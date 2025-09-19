@@ -1,0 +1,11 @@
+Para mí, imaginar una tabla hash es como pensar en un viejo escritorio con muchos cajones. Cada cajón tiene un número, y yo uso una función una fórmula sencilla para saber exactamente en qué cajón debo guardar cada objeto. Por ejemplo, si tengo una llave como un nombre, calculo un número que me indica el cajón correspondiente. Así, cuando necesito encontrar algo, voy directamente a ese cajón sin tener que buscar en todos. Esa inmediatez es lo que la hace tan rápida.
+
+Pero a veces, dos llaves diferentes me llevan al mismo cajón. Esto es lo que llamamos una colisión. Es como si quisiera guardar dos libros diferentes en el mismo cajón, y no caben. Aquí es donde entran las técnicas para resolverlo.
+
+Una forma común es el encadenamiento: dentro del cajón, en lugar de poner solo una cosa, coloco una pequeña lista o una cadena donde apunto todos los elementos que caen en ese mismo cajón. Así, si ya hay algo, simplemente añado el nuevo elemento a esa lista. Es práctico y fácil de entender.
+
+Otra estrategia es la dirección abierta: si el cajón que me tocó está lleno, entonces busco uno vacío cerca. Puedo hacerlo revisando el cajón de al lado (sondeo lineal), o probando con saltos más largos según una secuencia predefinida (sondeo cuadrático o doble hash). La idea es no rendirse y seguir buscando hasta encontrar un cajón disponible.
+
+En Java, cuando usamos un HashMap, todo esto pasa detrás de escenas. Nosotros solo usamos métodos como put() y get(), y Java se encarga de manejar los cajones y las colisiones de manera eficiente. Eso sí, una buena función de hash es clave para que los elementos se repartan bien y no tengamos demasiadas colisiones. Si todos los objetos caen en los mismos cajones, se pierde la ventaja de la velocidad.
+
+Al final, las tablas hash son así: una manera inteligente de organizar la información para acceder a ella casi al instante. Por eso se usan tanto en aplicaciones donde la velocidad importa, como en bases de datos o cachés. Y lo bonito es que, con un buen diseño, casi ni nos damos cuenta de toda la complejidad que hay por dentro.
