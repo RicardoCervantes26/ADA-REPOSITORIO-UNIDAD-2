@@ -10,20 +10,18 @@ import java.util.Scanner;
 public class SistemaPrincipal {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        
-        // USANDO TABLAS HASH EN LUGAR DE ARRAYLISTS
-        RepartidorBRIDGES.TablaHashRepartidores tablaRepartidores = new RepartidorBRIDGES.TablaHashRepartidores(10);
         ArrayList<PedidoBRIDGES> listaPedidos = new ArrayList<>();
+        ArrayList<RepartidorBRIDGES> listaRepartidores = new ArrayList<>();
         ArrayList<AsignacionBRIDGES> listaAsignaciones = new ArrayList<>();
-        ArrayList<EntregaBRIDGES> listaEntregas = new ArrayList<>();
+        ArrayList<EntregaBRIDGES> listaEntregas = new ArrayList<>(); // NUEVA LISTA PARA ENTREGAS
 
         int opcion;
         do {
             System.out.println("\n====== MENÚ PRINCIPAL BRIDGES ======");
             System.out.println("1. Módulo de Pedidos");
-            System.out.println("2. Módulo de Repartidores (TABLA HASH)");
+            System.out.println("2. Módulo de Repartidores");
             System.out.println("3. Módulo de Asignaciones");
-            System.out.println("4. Módulo de Entregas");
+            System.out.println("4. Módulo de Entregas"); // NUEVO MÓDULO
             System.out.println("5. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = sc.nextInt();
@@ -34,10 +32,10 @@ public class SistemaPrincipal {
                     moduloPedidos(sc, listaPedidos);
                     break;
                 case 2:
-                    moduloRepartidores(sc, tablaRepartidores);
+                    moduloRepartidores(sc, listaRepartidores);
                     break;
                 case 3:
-                    moduloAsignaciones(sc, listaPedidos, tablaRepartidores, listaAsignaciones);
+                    moduloAsignaciones(sc, listaPedidos, listaRepartidores, listaAsignaciones);
                     break;
                 case 4:
                     moduloEntregas(sc, listaAsignaciones, listaEntregas);
@@ -127,18 +125,16 @@ public class SistemaPrincipal {
         } while (opcion != 5);
     }
 
-    // ==================== MÓDULO REPARTIDORES (CON TABLA HASH) ====================
-    private static void moduloRepartidores(Scanner sc, RepartidorBRIDGES.TablaHashRepartidores tablaRepartidores) {
+    // ==================== MÓDULO REPARTIDORES ====================
+    private static void moduloRepartidores(Scanner sc, ArrayList<RepartidorBRIDGES> listaRepartidores) {
         int opcion;
         do {
-            System.out.println("\n--- MÓDULO DE REPARTIDORES (TABLA HASH) ---");
+            System.out.println("\n--- MÓDULO DE REPARTIDORES ---");
             System.out.println("1. Registrar Repartidor");
             System.out.println("2. Mostrar Repartidores");
-            System.out.println("3. Buscar Repartidor por Código (Hash)");
-            System.out.println("4. Eliminar Repartidor");
-            System.out.println("5. Mostrar Estadísticas de Tabla Hash");
-            System.out.println("6. Ordenar por Capacidad (Inserción)");
-            System.out.println("7. Volver al menú principal");
+            System.out.println("3. Ordenar Repartidores por Capacidad (Inserción)");
+            System.out.println("4. Buscar Repartidor por Código");
+            System.out.println("5. Volver al menú principal");
             System.out.print("Seleccione una opción: ");
             opcion = sc.nextInt();
             sc.nextLine();
@@ -157,68 +153,45 @@ public class SistemaPrincipal {
                     sc.nextLine();
 
                     RepartidorBRIDGES nuevoRepartidor = new RepartidorBRIDGES(codR, nombre, capacidad, disp);
-                    if (tablaRepartidores.insertar(nuevoRepartidor)) {
-                        System.out.println("Repartidor registrado con éxito.");
-                    }
+                    RepartidorBRIDGES.registrarRepartidor(listaRepartidores, nuevoRepartidor);
                     break;
 
                 case 2:
-                    tablaRepartidores.mostrarTodos();
+                    RepartidorBRIDGES.mostrarRepartidores(listaRepartidores);
                     break;
 
                 case 3:
-                    System.out.print("Ingrese código del repartidor a buscar: ");
-                    String codigoBuscar = sc.nextLine();
-                    RepartidorBRIDGES repartidor = tablaRepartidores.buscarPorCodigo(codigoBuscar);
-                    if (repartidor != null) {
-                        System.out.println("Repartidor encontrado:");
-                        System.out.println("Código: " + repartidor.getCodigo());
-                        System.out.println("Nombre: " + repartidor.getNombre());
-                        System.out.println("Capacidad: " + repartidor.getCapacidadCarga() + " kg");
-                        System.out.println("Disponible: " + (repartidor.isDisponible() ? "Sí" : "No"));
-                    } else {
-                        System.out.println("Repartidor no encontrado.");
-                    }
+                    RepartidorBRIDGES.ordenarPorCapacidadInsercion(listaRepartidores);
                     break;
 
                 case 4:
-                    System.out.print("Ingrese código a eliminar: ");
-                    String codigoEliminar = sc.nextLine();
-                    if (tablaRepartidores.eliminar(codigoEliminar)) {
-                        System.out.println("Repartidor eliminado con éxito.");
+                    System.out.print("Ingrese código del repartidor a buscar: ");
+                    String codigoBuscar = sc.nextLine();
+                    RepartidorBRIDGES repartidor = RepartidorBRIDGES.buscarPorCodigo(listaRepartidores, codigoBuscar);
+                    if (repartidor != null) {
+                        System.out.println("Repartidor encontrado:");
+                        System.out.println("Código: " + repartidor.getCodigo() +
+                                           " | Nombre: " + repartidor.getNombre() +
+                                           " | Capacidad: " + repartidor.getCapacidadCarga() + " kg" +
+                                           " | Disponible: " + (repartidor.isDisponible() ? "Sí" : "No"));
                     } else {
                         System.out.println("Repartidor no encontrado.");
                     }
                     break;
 
                 case 5:
-                    tablaRepartidores.mostrarEstadisticas();
-                    break;
-
-                case 6:
-                    ArrayList<RepartidorBRIDGES> todos = tablaRepartidores.obtenerTodos();
-                    RepartidorBRIDGES.ordenarPorCapacidadInsercion(todos);
-                    // Mostrar lista ordenada
-                    System.out.println("\n--- REPARTIDORES ORDENADOS POR CAPACIDAD ---");
-                    for (RepartidorBRIDGES r : todos) {
-                        System.out.println("Código: " + r.getCodigo() + " | Nombre: " + r.getNombre() + 
-                                         " | Capacidad: " + r.getCapacidadCarga() + "kg");
-                    }
-                    break;
-
-                case 7:
                     System.out.println("Volviendo al menú principal...");
                     break;
 
                 default:
                     System.out.println("Opción inválida.");
             }
-        } while (opcion != 7);
+        } while (opcion != 5);
     }
 
     // ==================== MÓDULO ASIGNACIONES ====================
     private static void moduloAsignaciones(Scanner sc, ArrayList<PedidoBRIDGES> listaPedidos,
-                                           RepartidorBRIDGES.TablaHashRepartidores tablaRepartidores,
+                                           ArrayList<RepartidorBRIDGES> listaRepartidores,
                                            ArrayList<AsignacionBRIDGES> listaAsignaciones) {
         int opcion;
         do {
@@ -233,7 +206,7 @@ public class SistemaPrincipal {
 
             switch (opcion) {
                 case 1:
-                    if (listaPedidos.isEmpty() || tablaRepartidores.obtenerTodos().isEmpty()) {
+                    if (listaPedidos.isEmpty() || listaRepartidores.isEmpty()) {
                         System.out.println("Debe haber al menos un pedido y un repartidor registrado.");
                         break;
                     }
@@ -247,42 +220,35 @@ public class SistemaPrincipal {
                     System.out.print("Seleccione un pedido: ");
                     int idxPedido = sc.nextInt() - 1;
 
-                    // Obtener solo repartidores disponibles
-                    ArrayList<RepartidorBRIDGES> repartidoresDisponibles = new ArrayList<>();
-                    ArrayList<RepartidorBRIDGES> todosRepartidores = tablaRepartidores.obtenerTodos();
-                    
                     System.out.println("\nRepartidores disponibles:");
-                    int contador = 1;
-                    for (int i = 0; i < todosRepartidores.size(); i++) {
-                        RepartidorBRIDGES r = todosRepartidores.get(i);
+                    for (int i = 0; i < listaRepartidores.size(); i++) {
+                        RepartidorBRIDGES r = listaRepartidores.get(i);
                         if (r.isDisponible()) {
-                            System.out.println(contador + ". " + r.getNombre() +
+                            System.out.println((i + 1) + ". " + r.getNombre() +
                                                " - Capacidad: " + r.getCapacidadCarga() + "kg" +
-                                               " - Disponible: Sí");
-                            repartidoresDisponibles.add(r);
-                            contador++;
+                                               " - Disponible: " + (r.isDisponible() ? "Sí" : "No"));
                         }
                     }
-
-                    if (repartidoresDisponibles.isEmpty()) {
-                        System.out.println("No hay repartidores disponibles.");
-                        break;
-                    }
-
                     System.out.print("Seleccione un repartidor: ");
                     int idxRepartidor = sc.nextInt() - 1;
 
                     if (idxPedido >= 0 && idxPedido < listaPedidos.size() &&
-                        idxRepartidor >= 0 && idxRepartidor < repartidoresDisponibles.size()) {
+                        idxRepartidor >= 0 && idxRepartidor < listaRepartidores.size()) {
 
                         PedidoBRIDGES pedidoSeleccionado = listaPedidos.get(idxPedido);
-                        RepartidorBRIDGES repartidorSeleccionado = repartidoresDisponibles.get(idxRepartidor);
+                        RepartidorBRIDGES repartidorSeleccionado = listaRepartidores.get(idxRepartidor);
 
                         // Validar capacidad del repartidor
                         if (pedidoSeleccionado.getPeso() > repartidorSeleccionado.getCapacidadCarga()) {
                             System.out.println("Error: El peso del pedido (" + pedidoSeleccionado.getPeso() + 
                                              "kg) excede la capacidad del repartidor (" + 
                                              repartidorSeleccionado.getCapacidadCarga() + "kg)");
+                            break;
+                        }
+
+                        // Validar disponibilidad
+                        if (!repartidorSeleccionado.isDisponible()) {
+                            System.out.println("Error: El repartidor no está disponible.");
                             break;
                         }
 

@@ -1,7 +1,6 @@
 package Clases;
 
 import java.util.ArrayList;
-import java.util.LinkedList; // IMPORT NECESARIO PARA TABLAS HASH
 
 public class RepartidorBRIDGES {
     // ================= Atributos =================
@@ -53,121 +52,7 @@ public class RepartidorBRIDGES {
         this.disponible = disponible;
     }
 
-    // ================= CLASE INTERNA PARA TABLA HASH =================
-    public static class TablaHashRepartidores {
-        private int tamaño;
-        private LinkedList<RepartidorBRIDGES>[] tabla;
-        
-        // Constructor
-        @SuppressWarnings("unchecked")
-        public TablaHashRepartidores(int tamaño) {
-            this.tamaño = tamaño;
-            this.tabla = new LinkedList[tamaño];
-            for (int i = 0; i < tamaño; i++) {
-                tabla[i] = new LinkedList<>();
-            }
-        }
-        
-        // Función de dispersión (Hash de División)
-        private int funcionHash(String clave) {
-            int hashCode = Math.abs(clave.hashCode());
-            return hashCode % tamaño;
-        }
-        
-        // Insertar repartidor
-        public boolean insertar(RepartidorBRIDGES repartidor) {
-            int indice = funcionHash(repartidor.getCodigo());
-            
-            // Verificar si ya existe el código
-            for (RepartidorBRIDGES r : tabla[indice]) {
-                if (r.getCodigo().equalsIgnoreCase(repartidor.getCodigo())) {
-                    System.out.println("Error: Ya existe un repartidor con código " + repartidor.getCodigo());
-                    return false;
-                }
-            }
-            
-            tabla[indice].add(repartidor);
-            return true;
-        }
-        
-        // BUSCAR REPARTIDOR POR CÓDIGO (USANDO TABLA HASH)
-        public RepartidorBRIDGES buscarPorCodigo(String codigo) {
-            int indice = funcionHash(codigo);
-            
-            for (RepartidorBRIDGES repartidor : tabla[indice]) {
-                if (repartidor.getCodigo().equalsIgnoreCase(codigo)) {
-                    return repartidor;
-                }
-            }
-            return null; // No encontrado
-        }
-        
-        // Eliminar repartidor
-        public boolean eliminar(String codigo) {
-            int indice = funcionHash(codigo);
-            
-            for (int i = 0; i < tabla[indice].size(); i++) {
-                if (tabla[indice].get(i).getCodigo().equalsIgnoreCase(codigo)) {
-                    tabla[indice].remove(i);
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        // Mostrar todos los repartidores
-        public void mostrarTodos() {
-            System.out.println("\n=== LISTA DE REPARTIDORES (TABLA HASH) ===");
-            for (int i = 0; i < tamaño; i++) {
-                if (!tabla[i].isEmpty()) {
-                    System.out.println("Índice " + i + ":");
-                    for (RepartidorBRIDGES r : tabla[i]) {
-                        System.out.println("  - " + r.getCodigo() + " | " + r.getNombre() + 
-                                         " | Capacidad: " + r.getCapacidadCarga() + "kg" +
-                                         " | Estado: " + (r.isDisponible() ? "Disponible" : "Ocupado"));
-                    }
-                }
-            }
-        }
-        
-        // Obtener todos los repartidores (para compatibilidad con código existente)
-        public ArrayList<RepartidorBRIDGES> obtenerTodos() {
-            ArrayList<RepartidorBRIDGES> todos = new ArrayList<>();
-            for (int i = 0; i < tamaño; i++) {
-                todos.addAll(tabla[i]);
-            }
-            return todos;
-        }
-        
-        // Estadísticas de la tabla hash
-        public void mostrarEstadisticas() {
-            int totalRepartidores = 0;
-            int colisiones = 0;
-            int maxLista = 0;
-            
-            for (int i = 0; i < tamaño; i++) {
-                int elementos = tabla[i].size();
-                totalRepartidores += elementos;
-                
-                if (elementos > 1) {
-                    colisiones += (elementos - 1);
-                }
-                
-                if (elementos > maxLista) {
-                    maxLista = elementos;
-                }
-            }
-            
-            System.out.println("\n=== ESTADÍSTICAS TABLA HASH REPARTIDORES ===");
-            System.out.println("Total repartidores: " + totalRepartidores);
-            System.out.println("Tamaño tabla: " + tamaño);
-            System.out.println("Colisiones totales: " + colisiones);
-            System.out.println("Factor de carga: " + (double) totalRepartidores / tamaño);
-            System.out.println("Máxima lista en un índice: " + maxLista);
-        }
-    }
-
-    // ================= MÉTODOS ESTÁTICOS (MANTENIDOS PARA COMPATIBILIDAD) =================
+    // ================= Métodos estáticos =================
 
     // Registrar repartidor validando que no se repita el código
     public static boolean registrarRepartidor(ArrayList<RepartidorBRIDGES> lista, RepartidorBRIDGES nuevo) {
@@ -197,7 +82,7 @@ public class RepartidorBRIDGES {
         }
     }
 
-    // Buscar repartidor por código (MÉTODO ANTIGUO - se mantiene por compatibilidad)
+    // Buscar repartidor por código
     public static RepartidorBRIDGES buscarPorCodigo(ArrayList<RepartidorBRIDGES> lista, String codigo) {
         for (RepartidorBRIDGES r : lista) {
             if (r.getCodigo().equalsIgnoreCase(codigo)) {
