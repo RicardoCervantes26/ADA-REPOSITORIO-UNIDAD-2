@@ -76,7 +76,7 @@ public class PedidoBRIDGES {
             for (PedidoBRIDGES p : lista) {
                 System.out.println("Código: " + p.getCodigo() +
                                    " | Distancia: " + p.getDistancia() + " km" +
-                                   " | Peso: " + p.getPeso() + " kg" +
+                                   " | Peso:" + p.getPeso() + " kg" +
                                    " | Prioridad: " + p.getPrioridad());
             }
         }
@@ -98,3 +98,4 @@ public class PedidoBRIDGES {
         System.out.println(" Lista de pedidos ordenada por código (inserción).");
     }
 }
+
