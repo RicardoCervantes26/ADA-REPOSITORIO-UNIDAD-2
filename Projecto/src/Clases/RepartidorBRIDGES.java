@@ -58,7 +58,7 @@ public class RepartidorBRIDGES {
     public static boolean registrarRepartidor(ArrayList<RepartidorBRIDGES> lista, RepartidorBRIDGES nuevo) {
         for (RepartidorBRIDGES r : lista) {
             if (r.getCodigo().equalsIgnoreCase(nuevo.getCodigo())) {
-                System.out.println(" Ya existe un repartidor con el código: " + nuevo.getCodigo());
+                System.out.println(" Ya exite un repartidor con el código: " + nuevo.getCodigo());
                 return false;
             }
         }
@@ -106,4 +106,5 @@ public class RepartidorBRIDGES {
         }
         System.out.println("Lista de repartidores ordenada por capacidad de carga (inserción).");
     }
+
 }
