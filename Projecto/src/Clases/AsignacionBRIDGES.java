@@ -4,14 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
-
 public class AsignacionBRIDGES {
     private String codigoAsignacion;
     private String codigoPedido;
     private String codigoRepartidor;
     private Date fechaAsignacion;
     private String estado; // Asignado, En camino, Entregado, Fallido
-
+    
     public AsignacionBRIDGES() {}
 
     public AsignacionBRIDGES(String codigoAsignacion, String codigoPedido, String codigoRepartidor) {
@@ -100,7 +99,6 @@ public class AsignacionBRIDGES {
         private static void cargarDesdeArchivo() {
             File archivo = new File(ARCHIVO);
             if (!archivo.exists()) return;
-
             try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
                 String linea;
                 while ((linea = reader.readLine()) != null) {
@@ -120,4 +118,5 @@ public class AsignacionBRIDGES {
         }
     }
 }
+
 */
