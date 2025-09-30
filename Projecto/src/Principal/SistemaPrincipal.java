@@ -21,7 +21,7 @@ public class SistemaPrincipal {
             System.out.println("1. Módulo de Pedidos");
             System.out.println("2. Módulo de Repartidores");
             System.out.println("3. Módulo de Asignaciones");
-            System.out.println("4. Módulo de Entregas"); // NUEVO MÓDULO
+            System.out.println("4.ódulo de Entregas"); // NUEVO MÓDULO
             System.out.println("5. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = sc.nextInt();
@@ -411,4 +411,5 @@ public class SistemaPrincipal {
             }
         } while (opcion != 4);
     }
+
 }
