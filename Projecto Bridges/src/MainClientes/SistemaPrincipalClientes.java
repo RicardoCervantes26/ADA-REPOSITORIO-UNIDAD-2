@@ -21,7 +21,7 @@ public class SistemaPrincipalClientes{
         });
     }
 
-    // Metodo para crear la interfaz principal
+    // Metodo principal interfaz
     private static void crearInterfaz() {
         frame = new JFrame("Sistema Clientes BRIDGES - CON HASH");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
