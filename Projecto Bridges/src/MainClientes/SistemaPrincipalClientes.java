@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class SistemaPrincipalClientes{
+public class SistemaPrincipalClientes {
     private static ClienteBRIDGES clienteLogueado = null;
     private static JFrame frame;
     private static JPanel cardPanel;
@@ -21,7 +21,7 @@ public class SistemaPrincipalClientes{
         });
     }
 
-    // Metodo principal interfaz
+    // Metodo para crear la interfaz principal
     private static void crearInterfaz() {
         frame = new JFrame("Sistema Clientes BRIDGES - CON HASH");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -465,6 +465,9 @@ public class SistemaPrincipalClientes{
 
     // Metodo para mostrar los pedidos del usuario en un dialogo
     private static void mostrarPedidosUsuario() {
+        // FORZAR RECARGA DE DATOS PARA OBTENER ESTADOS ACTUALIZADOS
+        PedidoClienteBRIDGES.GestorPedidos.recargarDatos();
+
         // Obtener pedidos del usuario actual
         ArrayList<PedidoClienteBRIDGES> misPedidos =
                 PedidoClienteBRIDGES.GestorPedidos.obtenerPedidosUsuario(clienteLogueado.getUsuario());
