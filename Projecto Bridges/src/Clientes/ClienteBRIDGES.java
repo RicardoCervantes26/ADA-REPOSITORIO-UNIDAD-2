@@ -4,7 +4,7 @@ import java.io.*;
 
 public class ClienteBRIDGES {
     private String usuario;
-    private String hashContraseña; // Se guardl hash, no la contraseña en texto
+    private String hashContraseña; // Se guarda el hash, no la contraseña en texto
 
     public ClienteBRIDGES() {}
 
@@ -147,4 +147,3 @@ public class ClienteBRIDGES {
         }
     }
 }
-

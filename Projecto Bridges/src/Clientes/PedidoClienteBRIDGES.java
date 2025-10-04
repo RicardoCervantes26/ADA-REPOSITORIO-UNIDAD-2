@@ -1,4 +1,4 @@
-package Clientes;  // Cambié de "Clientes" a "Clases"
+package Clientes;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ public class PedidoClienteBRIDGES {
     private String descripcion;
     private double peso;
     private String direccionEntrega;
-    private String estado; // Pendiente, Aceptado, En camino, Entregado
+    private String estado; // Pendiente, Aceptado, En camino, Entregado, Fallido
 
     public PedidoClienteBRIDGES() {}
 
@@ -55,6 +55,9 @@ public class PedidoClienteBRIDGES {
 
         // Obtener todos los pedidos de un usuario especifico
         public static ArrayList<PedidoClienteBRIDGES> obtenerPedidosUsuario(String usuario) {
+            // Recargar datos del archivo para obtener estados actualizados
+            cargarDesdeArchivo();
+
             ArrayList<PedidoClienteBRIDGES> pedidosUsuario = new ArrayList<>();
             for (PedidoClienteBRIDGES pedido : mapaPedidos.values()) {
                 if (pedido.getUsuarioCliente().equals(usuario)) {
@@ -66,6 +69,8 @@ public class PedidoClienteBRIDGES {
 
         // MÉTODO NUEVO: Cargar todos los pedidos (para el sistema empresa)
         public static ArrayList<PedidoClienteBRIDGES> cargarPedidos() {
+            // Recargar datos del archivo para obtener estados actualizados
+            cargarDesdeArchivo();
             return new ArrayList<>(mapaPedidos.values());
         }
 
@@ -80,7 +85,7 @@ public class PedidoClienteBRIDGES {
             return resultado;
         }
 
-        // Actualizar estado de pedido
+        // Actualizar estado de pedido (USADO POR EL SISTEMA EMPRESA)
         public static boolean actualizarEstado(String codigo, String nuevoEstado) {
             PedidoClienteBRIDGES pedido = mapaPedidos.get(codigo);
             if (pedido != null) {
@@ -89,6 +94,16 @@ public class PedidoClienteBRIDGES {
                 return true;
             }
             return false;
+        }
+
+        // MÉTODO NUEVO: Forzar recarga de datos
+        public static void recargarDatos() {
+            cargarDesdeArchivo();
+        }
+
+        // MÉTODO NUEVO: Obtener pedido especifico
+        public static PedidoClienteBRIDGES obtenerPedido(String codigo) {
+            return mapaPedidos.get(codigo);
         }
 
         // Guardar pedidos en archivo
@@ -111,6 +126,9 @@ public class PedidoClienteBRIDGES {
             if (!archivo.exists()) return;
 
             try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                // Limpiar mapa actual
+                mapaPedidos.clear();
+
                 String linea;
                 while ((linea = reader.readLine()) != null) {
                     String[] datos = linea.split("\\|");

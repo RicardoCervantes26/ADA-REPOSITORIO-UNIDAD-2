@@ -148,7 +148,6 @@ public class SistemaPrincipalEmpresa {
         btnRegistrar.addActionListener(e -> {
             // Panel para ingresar datos del repartidor
             JPanel panelRegistro = new JPanel(new GridLayout(4, 2, 10, 10));
-
             JTextField txtCodigo = new JTextField();
             JTextField txtNombre = new JTextField();
             JTextField txtCapacidad = new JTextField();
