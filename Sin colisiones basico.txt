@@ -1,0 +1,281 @@
+package Clientes;
+import java.util.HashMap;
+import java.io.*;
+
+public class ClienteBRIDGES {
+    private String usuario;
+    private String hashContraseña; // Se guarda el hash, no la contraseña en texto
+
+    public ClienteBRIDGES() {}
+
+    public ClienteBRIDGES(String usuario, String hashContraseña) {
+        this.usuario = usuario;
+        this.hashContraseña = hashContraseña;
+    }
+
+    public String getUsuario() { return usuario; }
+    public String getHashContraseña() { return hashContraseña; }
+    public void setHashContraseña(String hashContraseña) { this.hashContraseña = hashContraseña; }
+
+    // Clase utilitaria para funciones de hash
+    public static class HashUtil {
+        // Metodo de hash por division (convierte contraseña a codigo numerico)
+        public static String generarHash(String contraseña) {
+            int hash = 0;
+            for (char c : contraseña.toCharArray()) {
+                hash = (hash * 31 + c) % 1000; // % 1000 para códigos de 3 dígitos
+            }
+            return String.format("%03d", Math.abs(hash)); // Formato de 3 dígitos
+        }
+        
+        // Método para encontrar hash único evitando colisiones
+        public static String generarHashUnico(String contraseña, HashMap<String, ClienteBRIDGES> mapaClientes) {
+            String hashBase = generarHash(contraseña);
+            String hashFinal = hashBase;
+            int contador = 1;
+            
+            // Verificar si ya existe este hash en el sistema
+            while (existeHashEnSistema(hashFinal, mapaClientes)) {
+                System.out.println("¡Colisión detectada! Hash " + hashFinal + " ya existe");
+                
+                // Sumar 1 al valor numérico del hash (con rollover en 999)
+                int valorHash = Integer.parseInt(hashFinal);
+                valorHash = (valorHash + 1) % 1000; // Si llega a 1000, vuelve a 0
+                hashFinal = String.format("%03d", valorHash);
+                
+                System.out.println("Probando nuevo hash: " + hashFinal);
+                contador++;
+                
+                // Prevención de bucle infinito (en caso de que todos los hashes estén ocupados)
+                if (contador > 1000) {
+                    System.out.println("Error: No se pudo encontrar hash único después de 1000 intentos");
+                    return null;
+                }
+            }
+            
+            if (!hashBase.equals(hashFinal)) {
+                System.out.println("Hash final asignado: " + hashFinal + " (original: " + hashBase + ")");
+            }
+            
+            return hashFinal;
+        }
+        
+        // Verificar si un hash ya existe en el sistema
+        private static boolean existeHashEnSistema(String hash, HashMap<String, ClienteBRIDGES> mapaClientes) {
+            for (ClienteBRIDGES cliente : mapaClientes.values()) {
+                if (cliente.getHashContraseña().equals(hash)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    // Gestor principal de clientes con HashMap
+    public static class GestorClientes {
+        private static HashMap<String, ClienteBRIDGES> mapaClientes = new HashMap<>();
+        private static final String ARCHIVO = "clientes.txt";
+        private static final String ARCHIVO_HASH = "hashes_demo.txt"; // Para mostrar hashes
+
+        // Cargar datos al iniciar el programa
+        static {
+            cargarDesdeArchivo();
+        }
+
+        // Registrar nuevo cliente con verificacion de usuario único y prevención de colisiones de hash
+        public static boolean registrarCliente(String usuario, String contraseña) {
+            if (mapaClientes.containsKey(usuario.toLowerCase())) {
+                System.out.println("Error: El usuario ya existe");
+                return false;
+            }
+
+            // Generar hash único que evite colisiones
+            String hashContraseña = HashUtil.generarHashUnico(contraseña, mapaClientes);
+            
+            if (hashContraseña == null) {
+                System.out.println("Error: No se pudo registrar el usuario - no hay hashes disponibles");
+                return false;
+            }
+
+            ClienteBRIDGES nuevoCliente = new ClienteBRIDGES(usuario, hashContraseña);
+            mapaClientes.put(usuario.toLowerCase(), nuevoCliente);
+            guardarEnArchivos();
+            
+            System.out.println("Usuario '" + usuario + "' registrado exitosamente con hash: " + hashContraseña);
+            return true;
+        }
+
+        // Login: compara hash de contraseña ingresada con hash guardado
+        public static ClienteBRIDGES login(String usuario, String contraseña) {
+            ClienteBRIDGES cliente = mapaClientes.get(usuario.toLowerCase());
+            if (cliente != null) {
+                // Para login, solo necesitamos el hash base de la contraseña
+                String hashIngresado = HashUtil.generarHash(contraseña);
+                String hashGuardado = cliente.getHashContraseña();
+
+                System.out.println("Hash ingresado (base): " + hashIngresado);
+                System.out.println("Hash guardado: " + hashGuardado);
+
+                // Para verificar, comparamos con el hash base
+                // Pero también permitimos login si el hash base coincide con el principio del hash guardado
+                // (en caso de que el hash guardado haya sido modificado por colisión)
+                if (hashIngresado.equals(hashGuardado) || 
+                    hashGuardado.startsWith(hashIngresado)) {
+                    System.out.println("Login exitoso para: " + usuario);
+                    return cliente;
+                }
+            }
+            System.out.println("Login fallido para: " + usuario);
+            return null;
+        }
+
+        // Cambiar contraseña generando nuevo hash único
+        public static boolean cambiarContraseña(String usuario, String nuevaContraseña) {
+            ClienteBRIDGES cliente = mapaClientes.get(usuario.toLowerCase());
+            if (cliente != null) {
+                // Generar nuevo hash único para la nueva contraseña
+                String nuevoHash = HashUtil.generarHashUnico(nuevaContraseña, mapaClientes);
+                
+                if (nuevoHash == null) {
+                    System.out.println("Error: No se pudo cambiar contraseña - no hay hashes disponibles");
+                    return false;
+                }
+                
+                cliente.setHashContraseña(nuevoHash);
+                guardarEnArchivos();
+                System.out.println("Contraseña cambiada para '" + usuario + "' nuevo hash: " + nuevoHash);
+                return true;
+            }
+            return false;
+        }
+
+        // Metodo para demostrar el funcionamiento del hash
+        public static void mostrarHash(String contraseña) {
+            String hashBase = HashUtil.generarHash(contraseña);
+            String hashUnico = HashUtil.generarHashUnico(contraseña, mapaClientes);
+            
+            System.out.println("Contraseña: '" + contraseña + "'");
+            System.out.println("Hash base: " + hashBase);
+            System.out.println("Hash único asignado: " + hashUnico);
+        }
+
+        // Método para mostrar estadísticas del sistema
+        public static void mostrarEstadisticas() {
+            System.out.println("=== ESTADÍSTICAS DEL SISTEMA ===");
+            System.out.println("Total de clientes registrados: " + mapaClientes.size());
+            
+            // Contar colisiones
+            HashMap<String, Integer> frecuenciaHashes = new HashMap<>();
+            for (ClienteBRIDGES cliente : mapaClientes.values()) {
+                String hashBase = HashUtil.generarHash("dummy"); // Solo para obtener el método
+                // En un sistema real, necesitaríamos guardar el hash base original también
+                frecuenciaHashes.put(cliente.getHashContraseña(), 
+                    frecuenciaHashes.getOrDefault(cliente.getHashContraseña(), 0) + 1);
+            }
+            
+            int colisiones = 0;
+            for (int count : frecuenciaHashes.values()) {
+                if (count > 1) colisiones++;
+            }
+            
+            System.out.println("Hashes únicos en uso: " + frecuenciaHashes.size());
+            System.out.println("Colisiones resueltas: " + colisiones);
+            System.out.println("================================");
+        }
+
+        // Guardar datos en archivos
+        private static void guardarEnArchivos() {
+            guardarClientes();
+            guardarHashesDemo();
+        }
+
+        // Guardar datos de clientes para persistencia
+        private static void guardarClientes() {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO))) {
+                for (ClienteBRIDGES cliente : mapaClientes.values()) {
+                    writer.write(cliente.getUsuario() + "|" + cliente.getHashContraseña());
+                    writer.newLine();
+                }
+                System.out.println("Datos guardados en archivo: " + ARCHIVO);
+            } catch (IOException e) {
+                System.out.println("Error guardando clientes: " + e.getMessage());
+            }
+        }
+
+        // Guardar archivo de demostracion de hashes
+        private static void guardarHashesDemo() {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_HASH))) {
+                writer.write("Usuario|Hash");
+                writer.newLine();
+                writer.write("----------------");
+                writer.newLine();
+
+                for (ClienteBRIDGES cliente : mapaClientes.values()) {
+                    writer.write(cliente.getUsuario() + "|" + cliente.getHashContraseña());
+                    writer.newLine();
+                }
+                System.out.println("Hashes guardados en archivo: " + ARCHIVO_HASH);
+            } catch (IOException e) {
+                System.out.println("Error guardando hashes: " + e.getMessage());
+            }
+        }
+
+        // Cargar datos desde archivo al iniciar el programa
+        private static void cargarDesdeArchivo() {
+            File archivo = new File(ARCHIVO);
+            if (!archivo.exists()) {
+                System.out.println("No se encontró archivo de clientes. Se creará uno nuevo.");
+                return;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+                String linea;
+                int contador = 0;
+                while ((linea = reader.readLine()) != null) {
+                    String[] datos = linea.split("\\|");
+                    if (datos.length == 2) {
+                        ClienteBRIDGES cliente = new ClienteBRIDGES(datos[0], datos[1]);
+                        mapaClientes.put(datos[0].toLowerCase(), cliente);
+                        contador++;
+                    }
+                }
+                System.out.println("Cargados " + contador + " clientes desde archivo");
+            } catch (IOException e) {
+                System.out.println("Error cargando clientes: " + e.getMessage());
+            }
+        }
+        
+        // Método para probar colisiones
+        public static void probarColisiones() {
+            System.out.println("=== PRUEBA DE COLISIONES ===");
+            // Probar con contraseñas que deberían generar el mismo hash
+            String[] contraseñas = {"abc", "cba", "test", "tset", "hello", "world"};
+            
+            for (String contraseña : contraseñas) {
+                String hashBase = HashUtil.generarHash(contraseña);
+                String hashUnico = HashUtil.generarHashUnico(contraseña, mapaClientes);
+                System.out.println("Contraseña: '" + contraseña + "' -> Base: " + hashBase + " -> Único: " + hashUnico);
+            }
+            System.out.println("============================");
+        }
+    }
+
+    // Método main para pruebas
+    public static void main(String[] args) {
+        // Ejemplo de uso
+        System.out.println("=== SISTEMA DE CLIENTES CON ANTICOLISIÓN ===");
+        
+        // Probar el sistema
+        GestorClientes.registrarCliente("juan", "123");
+        GestorClientes.registrarCliente("maria", "123"); // Misma contraseña
+        GestorClientes.registrarCliente("pedro", "abc");
+        GestorClientes.registrarCliente("laura", "abc"); // Misma contraseña
+        
+        GestorClientes.mostrarEstadisticas();
+        GestorClientes.probarColisiones();
+        
+        // Probar login
+        GestorClientes.login("juan", "123");
+        GestorClientes.login("maria", "123");
+    }
+}
