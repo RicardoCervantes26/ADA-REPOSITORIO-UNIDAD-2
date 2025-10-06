@@ -35,7 +35,7 @@ public class ClienteBRIDGES {
         private static final String ARCHIVO = "clientes.txt";
         private static final String ARCHIVO_HASH = "hashes_demo.txt"; // Para mostrar hashes
 
-        // Cargar datos al iniciar el programa
+        // Cargar datos del txt al iniciar el programa
         static {
             cargarDesdeArchivo();
         }
