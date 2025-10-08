@@ -64,7 +64,7 @@ public class AsignacionBRIDGES {
             return new ArrayList<>(mapaAsignaciones.values());
         }
 
-        // Actualizar estado de una asignacion
+        // Actualizar estado de una asignacion ya sea entregado fallido etc
         public static boolean actualizarEstado(String codigoPedido, String nuevoEstado) {
             AsignacionBRIDGES asignacion = mapaAsignaciones.get(codigoPedido);
             if (asignacion != null) {
@@ -122,4 +122,5 @@ public class AsignacionBRIDGES {
             }
         }
     }
+
 }
