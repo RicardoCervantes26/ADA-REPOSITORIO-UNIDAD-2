@@ -274,7 +274,7 @@ public class ClienteBRIDGES {
         GestorClientes.mostrarEstadisticas();
         GestorClientes.probarColisiones();
         
-        // Probar login
+       
         GestorClientes.login("juan", "123");
         GestorClientes.login("maria", "123");
     }
