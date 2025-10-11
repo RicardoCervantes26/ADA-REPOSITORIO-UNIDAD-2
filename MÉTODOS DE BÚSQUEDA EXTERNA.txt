@@ -1,0 +1,79 @@
+MÉTODOS DE BÚSQUEDA EXTERNA - EXPLICACIÓN SENCILLA
+
+ 1. BÚSQUEDA SECUENCIAL POR BLOQUES
+
+¿Qué es?
+Imagina que tienes un libro grande y lo divides en capítulos (bloques). Para encontrar algo, lees cada capítulo completo desde el principio hasta que encuentras lo que buscas.
+
+Cómo funciona:
+- Dividimos los datos en grupos del mismo tamaño (bloques)
+- Empezamos por el primer bloque y lo revisamos todo
+- Si no encontramos lo que buscamos, pasamos al siguiente bloque
+- Seguimos así hasta encontrar el dato o hasta terminar todos los bloques
+
+Lo bueno:
+- Es super fácil de programar
+- No necesita cosas extra para funcionar
+- Usa poca memoria
+
+Lo malo:
+- Es lento si el archivo es muy grande
+- Si lo que buscas está al final, tienes que revisar todo
+- No puede saltar directamente a donde está lo que buscas
+
+Cuándo usarlo:
+- Cuando tienes archivos pequeños
+- Cuando sabes que lo que buscas suele estar al principio
+- Cuando quieres algo simple y rápido de hacer
+
+2. BÚSQUEDA CON ÍNDICES
+
+¿Qué es?
+Como tener un libro con un índice al final. Primero buscas en el índice la página donde está lo que necesitas, y luego vas directamente a esa página.
+
+Cómo funciona:
+- Tenemos dos archivos: uno con los datos y otro con el "índice"
+- El índice te dice exactamente en qué posición está cada cosa
+- Primero buscas en el índice dónde está tu dato
+- Luego saltas directamente a esa posición en el archivo principal
+
+Lo bueno:
+- Mucho más rápido que revisar todo
+- Perfecto para archivos grandes
+- Encuentra las cosas rápido sin leer todo
+
+Lo malo:
+- Necesita espacio extra para guardar el índice
+- Es más complicado de programar
+- Hay que actualizar el índice cuando cambian los datos
+
+Cuándo usarlo:
+- Cuando tienes archivos grandes
+- Cuando necesitas buscar cosas frecuentemente
+- Cuando la velocidad de búsqueda es importante
+
+3. BÚSQUEDA POR TRANSFORMACIÓN DE CLAVES (HASHING)
+
+¿Qué es?
+Como tener una fórmula mágica que te dice exactamente dónde está guardada cada cosa. Le das el nombre de lo que buscas y la fórmula te dice en qué cajón está.
+
+Cómo funciona:
+- Usamos una "función hash" que convierte el nombre en un número
+- Ese número te dice exactamente dónde buscar
+- Vas directamente a ese lugar sin tener que revisar otros sitios
+- Si hay colisiones (dos cosas en el mismo lugar), se resuelven con métodos especiales
+
+Lo bueno:
+- Es el método más rápido de todos
+- Encuentra las cosas casi al instante
+- Perfecto para buscar cosas individuales
+
+Lo malo:
+- A veces dos cosas quieren estar en el mismo sitio (colisiones)
+- La fórmula tiene que ser buena para que funcione bien
+- Puede haber espacios vacíos que no se usan
+
+Cuándo usarlo:
+- Cuando necesitas la máxima velocidad
+- En bases de datos y diccionarios
+- Cuando buscas cosas específicas muy frecuentemente
