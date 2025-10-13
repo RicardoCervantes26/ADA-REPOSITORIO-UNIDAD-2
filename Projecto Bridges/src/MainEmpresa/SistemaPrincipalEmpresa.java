@@ -27,7 +27,7 @@ public class SistemaPrincipalEmpresa {
         frame = new JFrame("Sistema Empresa BRIDGES - Gestion de Logistica");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 600);
-        frame.setLocationRelativeTo(null); // Centrar ventana
+        frame.setLocationRelativeTo(null); 
 
         // Configurar CardLayout para cambiar entre paneles
         cardLayout = new CardLayout();
@@ -262,13 +262,13 @@ public class SistemaPrincipalEmpresa {
     private static JPanel crearPanelAsignaciones() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        // Titulo
+       
         JLabel titulo = new JLabel("GESTION DE ASIGNACIONES", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         panel.add(titulo, BorderLayout.NORTH);
 
-        // Panel de botones
+      
         JPanel panelBotones = new JPanel(new FlowLayout());
         JButton btnAsignar = new JButton("Asignar Pedido");
         JButton btnMostrar = new JButton("Mostrar Todas");
@@ -284,7 +284,7 @@ public class SistemaPrincipalEmpresa {
 
         panel.add(panelBotones, BorderLayout.NORTH);
 
-        // Area de texto para mostrar resultados
+        
         JTextArea txtResultados = new JTextArea(20, 50);
         txtResultados.setEditable(false);
         JScrollPane scrollResultados = new JScrollPane(txtResultados);
@@ -640,4 +640,5 @@ public class SistemaPrincipalEmpresa {
 
         return panel;
     }
+
 }
