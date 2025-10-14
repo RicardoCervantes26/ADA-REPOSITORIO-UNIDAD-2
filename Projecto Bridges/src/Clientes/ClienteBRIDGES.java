@@ -206,13 +206,13 @@ public class ClienteBRIDGES {
             System.out.println("===========================");
         }
 
-        // Guardar datos en archivos
+        // Guardar datos en archivos txt 
         private static void guardarEnArchivos() {
             guardarClientes();
             guardarHashesDemo();
         }
 
-        // Guardar clientes en archivo
+        // Guardar clientes en archivo txt
         private static void guardarClientes() {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO))) {
                 for (ClienteBRIDGES cliente : mapaClientes.values()) {
@@ -224,7 +224,7 @@ public class ClienteBRIDGES {
             }
         }
 
-        // Guardar archivo de demostración
+        // Guardar archivo de demostración en un txt
         private static void guardarHashesDemo() {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_HASH))) {
                 writer.write("Usuario|Hash");
@@ -241,7 +241,7 @@ public class ClienteBRIDGES {
             }
         }
 
-        // Cargar datos desde archivo
+        // Cargar datos desde archivo de txt
         private static void cargarDesdeArchivo() {
             File archivo = new File(ARCHIVO);
             if (!archivo.exists()) return;
@@ -263,4 +263,5 @@ public class ClienteBRIDGES {
             }
         }
     }
+
 }
