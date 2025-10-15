@@ -1,0 +1,23 @@
+Resumen: Algoritmos de Búsqueda Externa
+
+Cuando trabajo con archivos muy grandes que no caben en la memoria principal, lo mejor es usar algoritmos de búsqueda externa. Estos ayudan a buscar y recuperar datos directamente desde el disco de manera eficiente. Las dos técnicas principales que vimos son:
+
+1. Listas Invertidas:
+   - Son como un índice detallado. Tengo un diccionario con todos los términos importantes y, para cada término, una lista de documentos donde aparece.
+   - Cuando indexo, analizo cada documento para extraer sus términos clave y voy actualizando este índice.
+   - Al buscar, consulto directamente el diccionario y accedo rápido a los documentos relevantes.
+   - Las uso principalmente en motores de búsqueda y sistemas donde necesito encontrar texto rápidamente.
+
+2. Multilistas:
+   - Son una versión más avanzada que me permite buscar por múltiples criterios a la vez.
+   - En lugar de un solo índice, manejo varias listas enlazadas. Por ejemplo, en una base de datos de empleados, puedo tener una lista por nombre, otra por departamento, etc.
+   - Cada registro lo inserto en varias listas según diferentes criterios.
+   - Cuando busco, puedo combinar estas listas para hacer búsquedas complejas.
+   - Son ideales para bases de datos donde necesito filtrar por varios campos simultáneamente.
+
+Beneficios
+- Con listas invertidas obtengo velocidad para búsquedas de texto.
+- Con multilistas tengo flexibilidad para consultas multicriterio.
+- Ambas me evitan tener que cargar todos los datos en memoria, lo que sería imposible con archivos muy grandes.
+
+En resumen, estas técnicas son esenciales para mí cuando trabajo con grandes volúmenes de datos y necesito que las búsquedas sean rápidas y eficientes.
