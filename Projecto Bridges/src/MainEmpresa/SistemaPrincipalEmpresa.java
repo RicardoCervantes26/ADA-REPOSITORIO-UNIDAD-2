@@ -320,7 +320,7 @@ public class SistemaPrincipalEmpresa {
                 repartidoresArray[i] = r.getCodigo() + " - " + r.getNombre() + " (" + r.getCapacidadCarga() + "kg)";
             }
 
-            // Panel de seleccion
+           
             JPanel panelSeleccion = new JPanel(new GridLayout(2, 2, 10, 10));
             JComboBox<String> cmbPedidos = new JComboBox<>(pedidosArray);
             JComboBox<String> cmbRepartidores = new JComboBox<>(repartidoresArray);
@@ -348,7 +348,7 @@ public class SistemaPrincipalEmpresa {
                     return;
                 }
 
-                // Crear asignacion
+                
                 AsignacionBRIDGES nuevaAsignacion = new AsignacionBRIDGES(
                         pedidoSeleccionado.getCodigo(),
                         repartidorSeleccionado.getCodigo()
@@ -642,3 +642,4 @@ public class SistemaPrincipalEmpresa {
     }
 
 }
+
