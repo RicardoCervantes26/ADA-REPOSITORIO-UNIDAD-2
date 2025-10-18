@@ -1,2 +1,0 @@
-78|Sam Porter|40.0|false
-25|William|35.0|true
