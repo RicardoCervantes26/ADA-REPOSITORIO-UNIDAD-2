@@ -1,0 +1,7 @@
+java:4,5
+payaso:3
+colorado:2,3
+remar:1,2
+script:4
+cerro:1,2
+patos:1,3
